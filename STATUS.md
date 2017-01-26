@@ -21,16 +21,7 @@ headers and sidebar subsections
 
 Example:
 
- |    2011     |    2012     |
- |------|------|------|------|
- | Cats | Dogs | Cats | Dogs |
- | \#   |  \#  |  \#  |  \#  |
-
-  |                 |          | 2011 | 2012 |
-  |-----------------|----------|------|------|
-  |Total firearms:  |          |  \#  |   \# |
-  |                 | Handguns |  \#  |   \# |
-  |                 | Rifles   |  \#  |   \# |
+![](http://i.imgur.com/I7X9yBT.png)
 
 *Wednesday Jan 11, 2017 16:00-18:30*
 
