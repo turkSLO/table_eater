@@ -9,7 +9,7 @@ full raw page at the time. It checks for if multiple tables exist on the
 page and separates them.
 
 URLs used:
-<https://ucr.fbi.gov/crime-in-the-u.s/2014/crime-in-the-u.s.-2014/tables/expanded-homicide-data/expanded_homicide_data_table_8_murder_victims_by_weapon_2010-2014.xls>
+[FBI](https://ucr.fbi.gov/crime-in-the-u.s/2014/crime-in-the-u.s.-2014/tables/expanded-homicide-data/expanded_homicide_data_table_8_murder_victims_by_weapon_2010-2014.xls)
 
 Libraries added: curl
 
@@ -48,3 +48,20 @@ write functions.
 Current worries: same as previous, but now with extraneous html tags as
 well and my current method of handling of data cleaning potentially
 causing issues.
+
+*Thursday Jan 26, 2017 16:30-17:00*
+
+Spoke with Dr. Glanz about the destination of the code and decided on only
+doing it as a Shiny App rather than the CRAN project and the Shiny App.
+We tested the code on the sites he gave me and saw a few issues come to
+light.
+
+- [ ] Headers that are separated as their own `<tbody>` or `<table>`
+- [ ] `<a href=...>`tags
+- [ ] # marks being neglected
+- [ ] Header value being skipped entirely
+- [ ] Curl misbehaving and cutting off early
+
+URLs used:
+[NFL](http://www.nfl.com/stats/categorystats?tabSeq=1&statisticPositionCategory=QUARTERBACK&season=2016&seasonType=REG),
+[Skyscraper Center](https://skyscrapercenter.com/compare-data/submit?type%5B%5D=building&status%5B%5D=COM&base_height_range=4&base_company=All&base_min_year=1885&base_max_year=9999&skip_comparison=on&output%5B%5D=list)
