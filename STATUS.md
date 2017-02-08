@@ -56,9 +56,9 @@ doing it as a Shiny App rather than the CRAN project and the Shiny App.
 We tested the code on the sites he gave me and saw a few issues come to
 light.
 
-- [ ] Headers that are separated as their own `<tbody>` or `<table>`
-- [ ] `<a href=...>`tags
-- [ ] # marks being neglected
+- [ ] Headers that are separated as their own ~~`<tbody>` or~~ `<table>`
+- [x] `<a href=...>`tags
+- [ ] # marks being neglected (?)
 - [ ] Header value being skipped entirely
 - [ ] Curl misbehaving and cutting off early
 
@@ -67,3 +67,13 @@ The reason for going fully to Shiny instead of CRAN is because of the idea of pr
 URLs used:
 [NFL](http://www.nfl.com/stats/categorystats?tabSeq=1&statisticPositionCategory=QUARTERBACK&season=2016&seasonType=REG),
 [Skyscraper Center](https://skyscrapercenter.com/compare-data/submit?type%5B%5D=building&status%5B%5D=COM&base_height_range=4&base_company=All&base_min_year=1885&base_max_year=9999&skip_comparison=on&output%5B%5D=list)
+
+*Tuesday Fev 7, 2017 15:00-16:40*
+
+I got the **NFL** link working properly. However, **Skyscraper Center** is quite the terrible piece of code, so I was not able to get that one working thus far. I cleaned up the code a bit. Reworked some of the regex substitutions to grab what I'm specifically looking for, rather than basing every section generically.
+
+Honestly, working with the Skyscraper code is giving me headaches, so I'm looking to just treat this as an extreme example and leave it for last. I would like to get a few more links from more commonly used sites to gather data tables and put those as a priority.
+
+After working with the code a bit more and testing on more sites, I plan on moving forward into designing it for Shiny. I need to talk to Dr. Glanz about how my code currently transforms the pages into the data tables, seeing if he'd prefer I use my current method of `sink -> cat -> sink` or if I should rewrite it to take in the data in a more complex way and turn it into a data frame, then use `write.table` or `write.csv` to turn it into a file.
+
+The issue with that design is that, if the data frame is malformed, the code would just fail. When it's made in my current way, if the table is malformed, the user can just clean it up themselves to get it in working order.

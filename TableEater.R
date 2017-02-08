@@ -28,16 +28,22 @@ TableEater <- function (url, type=c("csv","txt")) {
   }
   close(page)
   for(x in 1:length(tableraw)) {
-    tableraw[x] <- gsub("<td .*>","<td>",
-        gsub("<th .*>","<th>",
-        gsub("<tr .*>","<tr>",
-        gsub("<thead .*>","<thead>",
-        gsub("<table .*>","<table>",
+    tableraw[x] <- gsub("<a.*?>","<a>",
+        gsub("<td.*?>","<td>",
+        gsub("<th.*?>","<th>",
+        gsub("<tr.*?>","<tr>",
+        gsub("<thead.*?>","<thead>",
+        gsub("<table.*?>","<table>",
              tableraw[x],ignore.case = T),
         ignore.case = T),ignore.case = T),
-        ignore.case = T),ignore.case = T)
+        ignore.case = T),ignore.case = T),ignore.case = T)
     if(type[1] == "csv" && grepl(",",tableraw[x])) {
-      tableraw[x] <- paste0("\"",gsub("</t(h|d)>","\"</t\\1>",tableraw[x],ignore.case = T))
+      if(grepl(">.*,.*<", tableraw[x]))
+        tableraw[x] <- gsub(">(.*?)<",'>"\\1"<',tableraw[x])
+      else if(grepl(".*,.*<", tableraw[x]))
+        tableraw[x] <- gsub("(.*?)<",'"\\1"<',tableraw[x])
+      else
+        tableraw[x] <- gsub("(.*)",'"\\1"',tableraw[x])
     }
     if(type[1] == "txt" && grepl("\\s",tableraw[x])) {
       tableraw[x] <- gsub("\\s","",toTitleCase(tableraw[x]))
@@ -53,11 +59,12 @@ TableEater <- function (url, type=c("csv","txt")) {
     }
   }
   for(x in 1:length(tables)) {
-    tables[x] <- gsub("<(/|)\\w+>","",
+    tables[x] <- gsub("<(/|).*?>","",
                     gsub(paste0(sep,"</tr>"),"\n",
+                    gsub("\\s{2,}","",
                     gsub("</t(h|d)>",sep,
-                    gsub("<((/|)t(able|head|body)|tr|td|th)>","",
-                    tables[x],ignore.case = T),ignore.case = T),ignore.case = T),ignore.case = T)
+                    gsub("<((/|)(t(able|head|body)|a)|tr|td|th)>","",
+                    tables[x],ignore.case = T),ignore.case = T),ignore.case = T),ignore.case = T),ignore.case = T)
     sink(paste0(gsub("http(s|)://([a-zA-Z.]+)/.*","\\2",url),"~",x,".",type[1]))
     cat(tables[x])
     sink()
