@@ -1,0 +1,12 @@
+DefensiveLine Pos. 2017 2018 2019 2020 2021
+deforestBuckner DT $4,134,316 $4,961,180 $5,788,046 0- 0UFA
+quintonDial DE $2,806,750 $3,706,750 $4,681,750 0UFA 0-
+arikArmstead DE $2,684,354 $3,131,746 0- 0UFA 0-
+cornelliusCarradine DE $1,978,125 0UFA 0- 0- 0-
+ronaldBlair DE $607,601 $697,601 $787,602 0UFA 0-
+alexBalducci DT $540,000 0ERFA 0- 0- 0-
+glennDorsey DE 0UFA 0- 0- 0- 0-
+tonyJerod-Eddie DE 0UFA 0- 0- 0- 0-
+chrisJones DT 0RFA 0- 0- 0- 0-
+mikePurcell DT 0RFA 0- 0- 0- 0-
+zachMoore DE 0ERFA 0- 0- 0- 0-

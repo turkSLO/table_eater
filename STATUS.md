@@ -68,7 +68,7 @@ URLs used:
 [NFL](http://www.nfl.com/stats/categorystats?tabSeq=1&statisticPositionCategory=QUARTERBACK&season=2016&seasonType=REG),
 [Skyscraper Center](https://skyscrapercenter.com/compare-data/submit?type%5B%5D=building&status%5B%5D=COM&base_height_range=4&base_company=All&base_min_year=1885&base_max_year=9999&skip_comparison=on&output%5B%5D=list)
 
-*Tuesday Fev 7, 2017 15:00-16:40*
+*Tuesday Feb 7, 2017 15:00-16:40*
 
 I got the **NFL** link working properly. However, **Skyscraper Center** is quite the terrible piece of code, so I was not able to get that one working thus far. I cleaned up the code a bit. Reworked some of the regex substitutions to grab what I'm specifically looking for, rather than basing every section generically.
 
@@ -77,3 +77,25 @@ Honestly, working with the Skyscraper code is giving me headaches, so I'm lookin
 After working with the code a bit more and testing on more sites, I plan on moving forward into designing it for Shiny. I need to talk to Dr. Glanz about how my code currently transforms the pages into the data tables, seeing if he'd prefer I use my current method of `sink -> cat -> sink` or if I should rewrite it to take in the data in a more complex way and turn it into a data frame, then use `write.table` or `write.csv` to turn it into a file.
 
 The issue with that design is that, if the data frame is malformed, the code would just fail. When it's made in my current way, if the table is malformed, the user can just clean it up themselves to get it in working order.
+
+*Thursday Feb 9, 2017 17:00-17:15*
+
+Spoke with Dr. Glanz and decided we should move the the project onto the next step. He mentioned [Shinyapps.io](shinyapps.io) for when we move onto that stage. It will be where I move my project to when I get to that stage.
+
+We decided to try feeding back in the code to confirm that it comes out properly. If it doesn't, we can try catching the warnings and finding the problems and having the code automatically remove them problem lines. However, I would like to move to this stage after some more testing. More URLs were provided complimentary of both Dr. Glanz and Dr. Carlton, so I plan to make efforts on those.
+
+*Tuesday Feb 14, 2017 21:00-23:40*
+
+I tested the new URLs and found more big bugs, I have decided it's time to rewrite the way I handle the code. I plan on swapping to RCurl rather than base curl and rewriting sections of the code to split rather than take in the already split html and splice it back together. This should provide more accurate separation of tables and elements. I can split the sections I need, splice together using the proper separators, and place any needed special characters in simpler and more efficient code.
+
+The rewrite appears to be successful and works on all previous pages, excluding the Skyscraper one. However, I determined that one cannot be handled at all unless I run a more advanced scrape. It uses XHR to populate the table, so unless I figure out a way to get curl to wait for the page to actually load as if done in a browser, it cannot be gathered. This will become a problem with the future of HTML, as more things are becoming handled through asynchronous grabbing of files through XHR.
+
+I need to speak with Dr. Glanz about the links he sent me, specifically about the "metadata table" link. The other ones won't work for reasons of either being XHR or that they're not actually tables, just `<div>`s that look like tables.
+
+Libraries removed: curl
+
+Libraries added: RCurl
+
+URLs used:
+[Spotrac](http://www.spotrac.com/nfl/san-francisco-49ers/), 
+[Wikipedia on US Senators](https://en.wikipedia.org/wiki/List_of_current_United_States_Senators)

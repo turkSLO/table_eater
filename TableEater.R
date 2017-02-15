@@ -1,72 +1,46 @@
-library(curl)
+library(RCurl)
 library(tools)
 TableEater <- function (url, type=c("csv","txt")) {
-  page <- curl(url, "r")
-  line <- 0
-  tableraw <- c()
-  tables <- c()
-  pos <- c()
-  found <- F
   if (type[1] == "csv") {
     sep <- ","
   } else {
     sep <- " "
   }
-  while(length(x <- readLines(page, n=1))) {
-    if (grepl("<table",x,ignore.case = T)) {
-      line <- line+1
-      found <- T
-      pos <- c(pos,line)
-    }
-    if (found) {
-      line <- line+1
-      tableraw <- c(tableraw,x)
-    }
-    if (grepl("</table",x,ignore.case = T)) {
-      found <- F
-    }
+  page <- getURL(url)
+  page <- gsub("<(\\w+).*?>","<\\1>",page,ignore.case = T)
+  page <- gsub("(\\s{2,}|\n)","",page)
+  tableraw <- strsplit(page,"<table?>")[[1]][-1]
+  #initial clean
+  badtable <- c()
+  for(i in 1:length(tableraw)) {
+    tableraw[i] <- strsplit(tableraw[i],"</table>")[[1]][1]
+    tableraw[i] <- gsub("<((/|)t(able|head|body)|tr|td|th)>","",tableraw[i],ignore.case = T)
+    if(nchar(tableraw[i]) == 0)
+      badtable <- c(badtable, i)
   }
-  close(page)
-  for(x in 1:length(tableraw)) {
-    tableraw[x] <- gsub("<a.*?>","<a>",
-        gsub("<td.*?>","<td>",
-        gsub("<th.*?>","<th>",
-        gsub("<tr.*?>","<tr>",
-        gsub("<thead.*?>","<thead>",
-        gsub("<table.*?>","<table>",
-             tableraw[x],ignore.case = T),
-        ignore.case = T),ignore.case = T),
-        ignore.case = T),ignore.case = T),ignore.case = T)
-    if(type[1] == "csv" && grepl(",",tableraw[x])) {
-      if(grepl(">.*,.*<", tableraw[x]))
-        tableraw[x] <- gsub(">(.*?)<",'>"\\1"<',tableraw[x])
-      else if(grepl(".*,.*<", tableraw[x]))
-        tableraw[x] <- gsub("(.*?)<",'"\\1"<',tableraw[x])
-      else
-        tableraw[x] <- gsub("(.*)",'"\\1"',tableraw[x])
+  if(length(badtable))
+    tableraw <- tableraw[-badtable]
+  #actual work
+  for(i in 1:length(tableraw)) {
+    row <- strsplit(tableraw[i],"</tr>")[[1]]
+    for(j in 1:length(row)) {
+      elem <- strsplit(row[j],"</t(h|d)>")[[1]]
+      for(k in 1:length(elem)) {
+        if(type[1] == "csv" && grepl(",",elem[k])) {
+          elem[k] <- paste0('"',elem[k],'"')
+        }
+        if(type[1] == "txt" && grepl("\\s",elem[k])) {
+          elem[k] <- gsub("\\s","",toTitleCase(elem[k]))
+        }
+      }
+      row[j] <- paste0(elem, collapse = sep)
     }
-    if(type[1] == "txt" && grepl("\\s",tableraw[x])) {
-      tableraw[x] <- gsub("\\s","",toTitleCase(tableraw[x]))
-    }
+    tableraw[i] <- paste0(row, collapse = "\n")
+    tableraw[i] <- gsub("<(/|).+?>","",tableraw[i])
   }
-  if (length(pos)==1) {
-    tables <- c(tables,paste0(tableraw,collapse = ""))
-  } else {
-    for(x in 1:length(pos)) {
-      start <- pos[x]
-      end <- if(x+1 <= length(pos)) pos[x+1]-1 else length(tableraw)
-      tables <- c(tables,paste0(tableraw[start:end],collapse = ""))
-    }
-  }
-  for(x in 1:length(tables)) {
-    tables[x] <- gsub("<(/|).*?>","",
-                    gsub(paste0(sep,"</tr>"),"\n",
-                    gsub("\\s{2,}","",
-                    gsub("</t(h|d)>",sep,
-                    gsub("<((/|)(t(able|head|body)|a)|tr|td|th)>","",
-                    tables[x],ignore.case = T),ignore.case = T),ignore.case = T),ignore.case = T),ignore.case = T)
-    sink(paste0(gsub("http(s|)://([a-zA-Z.]+)/.*","\\2",url),"~",x,".",type[1]))
-    cat(tables[x])
+  for(i in 1:length(tableraw)) {
+    sink(paste0(gsub("http(s|)://([a-zA-Z.]+)/.*","\\2",url),"~",i,".",type[1]))
+    cat(tableraw[i])
     sink()
   }
 }
