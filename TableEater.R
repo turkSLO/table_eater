@@ -8,7 +8,7 @@ TableEater <- function (url, type=c("csv","txt")) {
     sep <- " "
   }
   page <- getURL(url)
-  page <- str_replace_all(page,regex("<.*sortkey.*?>(.*?)</.*?>",ignore_case = T),"\\1")
+  page <- str_replace_all(page,regex("<span.*sortkey.*?span>",ignore_case = T),"")
   #page <- gsub("<(\\w+).*?>","<\\1>",page,ignore.case = T)
   page <- str_replace_all(page,"(\\s{2,}|\n)","")
   tableraw <- strsplit(page,"<table.*?>")[[1]][-1]

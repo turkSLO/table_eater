@@ -1,5 +1,5 @@
-Affiliation Members
-&#160; republicanParty 52
-&#160; democraticParty 46
+Affiliation Affiliation Members
+&#160; RepublicanParty 52
+&#160; DemocraticParty 46
 &#160; Independent 2[A]
-Total 100
+Total Total 100
