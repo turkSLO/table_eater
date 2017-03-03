@@ -99,3 +99,24 @@ Libraries added: RCurl
 URLs used:
 [Spotrac](http://www.spotrac.com/nfl/san-francisco-49ers/), 
 [Wikipedia on US Senators](https://en.wikipedia.org/wiki/List_of_current_United_States_Senators)
+
+*Wednesday Mar 1, 2017 19:00-21:00*
+
+Took me a lot of time to come up with just a few lines, but I think I have "colspan" handled. If it turns out you can't have two headers by the same name, then I will split the code so it handles the `<th>` separately from `<td>` when it comes to "colspan".
+
+I started using the stringr package so I can match with regex and get the actual strings back out so that I can duplicate them. However, while I have discovered a method to handle "colspan" using that method, "rowspan" still eludes me. I need to somehow inject into the next row a duplicate of the data.
+
+Haven't tested the code as it's currently not workable. If I tested it, a lot of working sites would either break or be going through extraneous tasks that might break the rest of the code.
+
+Libraries added: stringr
+
+*Thursday Mar 2, 2017 11:00-12:00 & 14:00-17:40*
+
+Ran through dozens of different ways to process the data and be able to rip out the "colspan" and the "rowspan". After hours of trying many different methods, I finally came up with a way to handle it perfectly. It took a lot of attacking the process from different angles, finding complications in my design for handling such methods, and then rearranged the order of operations in a way that allowed for "perfect" management of the data (as like before), adding management of the extra variables presented, and cleaning the excess junk off without issue.
+
+"Sortkey" took a lot of hammering down, because it kept on grabbing entire elements and removing them, rather than just the small subset I wanted. It took a lot of regex management, but I got a way to do it; it's rather sloppy though. There is definitely a better way to handle it, but that is a very low priority.
+
+It is almost time to move onto the next stage, the RShiny app. I just want to replace some of the code that using the base methods of string manipulation with stringr, consistency is king.
+
+Tested on the US Senators again, works perfectly.
+
