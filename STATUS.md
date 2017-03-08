@@ -58,9 +58,9 @@ light.
 
 - [ ] Headers that are separated as their own ~~`<tbody>` or~~ `<table>`
 - [x] `<a href=...>`tags
-~~- [ ] # marks being neglected (?)
-- [ ] Header value being skipped entirely
-- [ ] Curl misbehaving and cutting off early~~
+- [x] ~~# marks being neglected (?)~~
+- [x] ~~Header value being skipped entirely~~
+- [x] ~~Curl misbehaving and cutting off early~~
 
 The reason for going fully to Shiny instead of CRAN is because of the idea of previewing the tables and selecting the ones you want (and potentially merge).
 
