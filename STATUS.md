@@ -58,9 +58,9 @@ light.
 
 - [ ] Headers that are separated as their own ~~`<tbody>` or~~ `<table>`
 - [x] `<a href=...>`tags
-- [ ] # marks being neglected (?)
+~~- [ ] # marks being neglected (?)
 - [ ] Header value being skipped entirely
-- [ ] Curl misbehaving and cutting off early
+- [ ] Curl misbehaving and cutting off early~~
 
 The reason for going fully to Shiny instead of CRAN is because of the idea of previewing the tables and selecting the ones you want (and potentially merge).
 
@@ -120,3 +120,20 @@ It is almost time to move onto the next stage, the RShiny app. I just want to re
 
 Tested on the US Senators again, works perfectly.
 
+*Thursday Mar 2, 2017 19:00-20:00*
+
+Worked on trying to find regex alternatives to decrease the amount of searches done of the raw html.
+
+*Friday Mar 3, 2017 13:30-16:30*
+
+Researched which methods in stringr replace what of the base package as well as tinkered around with regex to see what methods could work in optimizing the matching and replacing.
+
+[Stringr vs Base](https://journal.r-project.org/archive/2010-2/RJournal_2010-2_Wickham.pdf)
+
+*Tuesday Mar 7, 2017 14:30-17:00*
+
+Replaced all the base character maipulation functions with stringr's versions. Also took care of the situation where there might be a stray quote in an item (like used in reference to inches). That one was particularly though since I had to play around with regex until I finally discovered that the regex functions stringr has are more advanced and has more regex capture methods than JavaScript (my usual coding language).
+
+**Stage I COMPLETE**
+
+Planned for next time: STAGE II (Shiny App)
