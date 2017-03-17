@@ -137,3 +137,21 @@ Replaced all the base character maipulation functions with stringr's versions. A
 **Stage I COMPLETE**
 
 Planned for next time: STAGE II (Shiny App)
+
+*Wednesday Mar 15, 2017 19:00-21:00*
+
+Read over shiny code I had produced for a project back in STAT 331. Looked over the reference guide for shiny for changes in design and potential ways to tackle the overall design. Created an account on shinyapps.io and looked over what I need to do with it. It appears to be more for snapshots rather than using for constant editing. I'm not sure if it will overwrite the old app if I push a new one, that will have to be something I test.
+
+*Thursday Mar 16, 2017 13:00-15:40 16:00-20:00*
+
+Been working hard at getting the shiny app running. Had to rewrite sections of the TableEater code to work for the new direction. Rather than just outputting based on the type asked for, it should now just produce the csv and txt formats and then compiles them into files when you click download. Sadly I haven't been able to get downloading to work properly, but I do have a lot of the UI completed. Currently the Inverse Selection button does nothing, but that will be a quick addition compared to what I think I might have to do for the download buttons. Other than that, the preview works and the inputting of URLs works.
+
+[ShinyApps.io Deployment](https://turkslo.shinyapps.io/shiny/) (Since it's not done, you really can only see how preview works)
+
+What I need to do:
+
+- [ ] Get downloads working.
+- [ ] Make it so it only runs through the TableEater code if there's actually a table on the page
+- [ ] Make it delete files after the user closes session/changes URLs
+
+Packages added: utils (for making zip files containing the tables)
