@@ -42,7 +42,7 @@ TableEater <- function (url, type=c("csv","txt")) {
         }
         if(type[1] == "csv" && str_detect(elem[k],'(?<=>)\\\"'))
           elem[k] <- str_replace_all(elem[k], '\\\"', '\"\"')
-        if(type[1] == "csv" && str_detect(elem[k],'(,|\\\"\\\")')) {
+        if(type[1] == "csv" && str_detect(elem[k],'(?<=>).*(,|\\\"\\\")')) {
           elem[k] <- str_c('"',str_trim(elem[k]),'"')
         }
         if(type[1] == "txt" && str_detect(elem[k],"\\s")) {
@@ -58,7 +58,7 @@ TableEater <- function (url, type=c("csv","txt")) {
         if(colspan > 1) {
           elem[k] <- str_c(rep(elem[k],times=colspan),collapse = sep)
         }
-        if(length(thd.rs[[k]]))
+        if(length(thd.rs[[k]]) && as.numeric(thd.rs[[k]][,2]) > 1)
           rowspan <- c(rowspan,list(c(k,as.numeric(thd.rs[[k]][,2])-1,colspan,elem[k])))
       }
       row[j] <- str_c(elem, collapse = sep)

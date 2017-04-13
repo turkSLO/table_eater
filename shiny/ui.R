@@ -15,9 +15,11 @@ shinyUI(bootstrapPage(
       HTML("</br>"),
       htmlOutput("tableOut"),
       selectInput("tablesChosen", NULL, NULL, multiple = T),
-      actionButton("invertSel", "Invert Selection"),
-      actionButton("dCSV","Download CSV"),
-      actionButton("dTXT","Download TXT")
+      column(2,actionButton("invertSel", "Invert Selection")), # Move into the conditional panel
+      column(4,conditionalPanel(condition="input.tablesChosen",
+                       downloadButton("dCSV","Download CSV"),
+                       downloadButton("dTXT","Download TXT")
+      ))
     )
   ),
   tags$script(

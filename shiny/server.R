@@ -4,15 +4,13 @@ library(stringr)
 library(utils)
 library(shiny)
 shinyServer(function(input, output, session) {
-  data <- reactiveValues(url=NULL, tables=NULL, selected=NULL, showing=0, ntables=0)
-  lastURL <- NULL
-  zipname <- NULL
+  data <- reactiveValues(url=NULL, tables=NULL, selected=NULL, showing=0, ntables=0, zipname = NULL, lastURL = NULL)
   observeEvent(input$submitURL,{
     if(url.exists(input$url)) {
       lasturl <- data$url
       data$url <- input$url
       data$tables <- TableEater(data$url)
-      zipname <- str_c(str_replace_all(data$url,"http(s|)://([a-zA-Z.]+)/.*","\\2"),".zip")
+      data$zipname <- str_c(str_replace_all(data$url,"http(s|)://([a-zA-Z.]+)/.*","\\2"),".zip")
       data$ntables <- length(data$tables[[2]])
       updateSelectInput(session, "tablesChosen", choices = 1:data$ntables)
       output$tableOut <- renderUI({
@@ -45,25 +43,22 @@ shinyServer(function(input, output, session) {
   observeEvent(input$tablesChosen,{
     data$selected <- input$tablesChosen
   })
-  #### SWAP THE FOLLOWING TO USE ACTION BUTTON INSTEAD ####
-  # observe({
-  #   if(!is.null(data$tables)) {
-  #     output$dCSV <- downloadHandler(filename = zipname, content = function(file) {
-  #       t <- data$tables$csv[dat$selected]
-  #       for(i in 1:length(t)) {
-  #         sink(str_c(zipname,"~",data$selected[i],".csv"))
-  #         cat(t[i])
-  #         sink()
-  #       }
-  #       zip(file, str_c(zipname,"~",data$selected,".csv"))
-  #       for(i in 1:length(t))
-  #         unlink(str_c(zipname,"~",data$selected[i],".csv"))
-  #     })
-  #     output$dTXT <- downloadHandler(filename = zipname, content = function(file) {
-  #       createZIP(data$selected, data$tables$txt, "txt", file, zipname)
-  #     })
-  #   }
-  # })
+  output$dCSV <- downloadHandler(filename = function(){data$zipname}, content = function(file) {
+    t <- data$tables$csv[as.numeric(data$selected)]
+    for(i in 1:length(t)) {
+      sink(str_c(data$zipname,"~",data$selected[i],".csv"))
+      cat(t[i])
+      sink()
+    }
+    zip(file, str_c(data$zipname,"~",data$selected,".csv"))
+    for(i in 1:length(t))
+      unlink(str_c(data$zipname,"~",data$selected[i],".csv"))
+  },
+  contentType = "application/zip")
+  ### FIX DOWN BELOW ###
+  output$dTXT <- downloadHandler(filename = data$zipname, content = function(file) {
+    createZIP(data$selected, data$tables$txt, "txt", file, data$zipname)
+  })
   #### END ####
   #On URL change, delete files
   #On session end, delete current URL files (if any)
@@ -115,7 +110,7 @@ TableEater <- function (url) {
         }
         if(str_detect(elem[k],'(?<=>)\\\"'))
           elemCSV[k] <- str_replace_all(elemCSV[k], '\\\"', '\"\"')
-        if(str_detect(elem[k],'(,|\\\"\\\")'))
+        if(str_detect(elem[k],'(?<=>).*(,|\\\"\\\")'))
           elemCSV[k] <- str_c('"',str_trim(elemCSV[k]),'"')
         if(str_detect(elem[k],"\\s"))
           elemTXT[k] <- str_replace_all(str_to_title(elemTXT[k]),"\\s","")
@@ -131,11 +126,11 @@ TableEater <- function (url) {
           elemCSV[k] <- str_c(rep(elemCSV[k],times=colspan),collapse = sep[1])
           elemTXT[k] <- str_c(rep(elemTXT[k],times=colspan),collapse = sep[2])
         }
-        if(length(thd.rs[[k]]))
+        if(length(thd.rs[[k]]) && as.numeric(thd.rs[[k]][,2]) > 1)
           rowspan <- c(rowspan,list(c(k,as.numeric(thd.rs[[k]][,2])-1,colspan,elemCSV[k],elemTXT[k])))
       }
       rowCSV[j] <- str_c(elemCSV, collapse = sep[1])
-      rowTXT[j] <- str_c(elemTXT, collapse = sep[1])
+      rowTXT[j] <- str_c(elemTXT, collapse = sep[2])
     }
     tables$csv[i] <- str_c(rowCSV, collapse = "\n")
     tables$txt[i] <- str_c(rowTXT, collapse = "\n")

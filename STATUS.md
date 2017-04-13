@@ -150,8 +150,12 @@ Been working hard at getting the shiny app running. Had to rewrite sections of t
 
 What I need to do:
 
-- [ ] Get downloads working.
+- [x] Get downloads working.
 - [ ] Make it so it only runs through the TableEater code if there's actually a table on the page
 - [ ] Make it delete files after the user closes session/changes URLs
 
 Packages added: utils (for making zip files containing the tables)
+
+*Wednesday Apr 12, 2017 17:00-21:30*
+
+There was an overlooked issue in the tableEater function that would cause data to be duplicated if `rowspan=1`, so I fixed that. Took me quite a long time to get CSV downloading to work. TXT does not work yet (the function currently does something, but I would not use it because it definitely does not work as it is supposed to), but it will be an easy copy-paste and minor replacements to get it working just the same. It looks like "zip" does not work on Windows by default and requires downloading of RTools in order to work. However, ShinyApps.io is not run on Windows, so the app works properly on there. I have not extensively tested it yet, but I do know it works on the FBI table. Next, I plan on fixing up TXT and cleaning up the UI.
