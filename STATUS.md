@@ -154,7 +154,7 @@ What I need to do:
 - [x] Make it so it only runs through the TableEater code if there's actually a table on the page
 - [ ] Make it delete files after the user closes session/changes URLs
 
-Packages added: utils (for making zip files containing the tables)
+Libraries added: utils (for making zip files containing the tables)
 
 *Wednesday Apr 12, 2017 17:00-21:30*
 
@@ -162,8 +162,12 @@ There was an overlooked issue in the tableEater function that would cause data t
 
 **REQUIREMENT: A Unix system with zip command or RTools installed on Windows**
 
-*Thursday Apr 13, 2017 15:00-17:00 & 20:00-21:00*
+*Thursday Apr 13, 2017 15:00-17:00 & 20:00-21:30*
 
 Finished TXT, did some UI clean up, got the Inverse Selection button running, and made it pop up an error dialog rather than crash when using a site without tables. Minor testing to see how multiple tables are treated. Thus far, properly.
 
 Staring at the code and the applet on shinyapps.io trying to see what else I need to do. I need to talk to Dr. Glanz about where to go from here.
+
+RCurl could not handle redirects, but rvest can, so I added that library. I would have completely replaced RCurl, but rvest does not have the ability to check if a URL exists and would require a tryCatch rather than a simple if-else.
+
+Libraries added: rvest

@@ -1,4 +1,4 @@
-library(RCurl)
+library(rvest)
 library(tools)
 library(stringr)
 TableEater <- function (url, type=c("csv","txt")) {
@@ -7,7 +7,7 @@ TableEater <- function (url, type=c("csv","txt")) {
   } else {
     sep <- " "
   }
-  page <- getURL(url)
+  page <- read_html(url)
   page <- str_replace_all(page,regex("<span.*sortkey.*?span>",ignore_case = T),"")
   page <- str_replace_all(page,"(\\s{2,}|\n)","")
   tableraw <- str_split(page,"<table.*?>",simplify = T)[1,-1]

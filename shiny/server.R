@@ -1,3 +1,4 @@
+library(rvest)
 library(RCurl)
 library(tools)
 library(stringr)
@@ -92,7 +93,7 @@ shinyServer(function(input, output, session) {
 
 TableEater <- function (url) {
   sep <- c(","," ")
-  page <- getURL(url)
+  page <- read_html(url)
   page <- str_replace_all(page,regex("<span.*sortkey.*?span>",ignore_case = T),"")
   page <- str_replace_all(page,"(\\s{2,}|\n)","")
   tableraw <- str_split(page,"<table.*?>",simplify = T)[1,-1]
