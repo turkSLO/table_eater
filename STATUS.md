@@ -151,7 +151,7 @@ Been working hard at getting the shiny app running. Had to rewrite sections of t
 What I need to do:
 
 - [x] Get downloads working.
-- [ ] Make it so it only runs through the TableEater code if there's actually a table on the page
+- [x] Make it so it only runs through the TableEater code if there's actually a table on the page
 - [ ] Make it delete files after the user closes session/changes URLs
 
 Packages added: utils (for making zip files containing the tables)
