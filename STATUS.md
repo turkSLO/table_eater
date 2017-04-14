@@ -159,3 +159,11 @@ Packages added: utils (for making zip files containing the tables)
 *Wednesday Apr 12, 2017 17:00-21:30*
 
 There was an overlooked issue in the tableEater function that would cause data to be duplicated if `rowspan=1`, so I fixed that. Took me quite a long time to get CSV downloading to work. TXT does not work yet (the function currently does something, but I would not use it because it definitely does not work as it is supposed to), but it will be an easy copy-paste and minor replacements to get it working just the same. It looks like "zip" does not work on Windows by default and requires downloading of RTools in order to work. However, ShinyApps.io is not run on Windows, so the app works properly on there. I have not extensively tested it yet, but I do know it works on the FBI table. Next, I plan on fixing up TXT and cleaning up the UI.
+
+**REQUIREMENT: A Unix system with zip command or RTools installed on Windows**
+
+*Thursday Apr 13, 2017 15:00-17:00 & 20:00-21:00*
+
+Finished TXT, did some UI clean up, got the Inverse Selection button running, and made it pop up an error dialog rather than crash when using a site without tables. Minor testing to see how multiple tables are treated. Thus far, properly.
+
+Staring at the code and the applet on shinyapps.io trying to see what else I need to do. I need to talk to Dr. Glanz about where to go from here.

@@ -4,12 +4,23 @@ library(stringr)
 library(utils)
 library(shiny)
 shinyServer(function(input, output, session) {
-  data <- reactiveValues(url=NULL, tables=NULL, selected=NULL, showing=0, ntables=0, zipname = NULL, lastURL = NULL)
+  data <- reactiveValues(url=NULL, tables=NULL, selected=NULL, showing=0, ntables=0, zipname = NULL)
   observeEvent(input$submitURL,{
     if(url.exists(input$url)) {
-      lasturl <- data$url
       data$url <- input$url
-      data$tables <- TableEater(data$url)
+      badURL <- F
+      tryCatch({
+        data$tables <- TableEater(data$url)
+      }, warning = function(w) {
+        session$sendCustomMessage(type = "alert", "No Tables Found")
+        badURL <<- T
+      }, error = function(e) {
+        session$sendCustomMessage(type = "alert", "No Tables Found")
+        badURL <<- T
+      })
+      if(badURL) {
+        return()
+      }
       data$zipname <- str_c(str_replace_all(data$url,"http(s|)://([a-zA-Z.]+)/.*","\\2"),".zip")
       data$ntables <- length(data$tables[[2]])
       updateSelectInput(session, "tablesChosen", choices = 1:data$ntables)
@@ -43,6 +54,10 @@ shinyServer(function(input, output, session) {
   observeEvent(input$tablesChosen,{
     data$selected <- input$tablesChosen
   })
+  observeEvent(input$invertSel,{
+    data$selected <- (1:data$ntables)[-as.numeric(data$selected)]
+    updateSelectInput(session, "tablesChosen", selected = data$selected)
+  })
   output$dCSV <- downloadHandler(filename = function(){data$zipname}, content = function(file) {
     t <- data$tables$csv[as.numeric(data$selected)]
     for(i in 1:length(t)) {
@@ -55,20 +70,25 @@ shinyServer(function(input, output, session) {
       unlink(str_c(data$zipname,"~",data$selected[i],".csv"))
   },
   contentType = "application/zip")
-  ### FIX DOWN BELOW ###
-  output$dTXT <- downloadHandler(filename = data$zipname, content = function(file) {
-    createZIP(data$selected, data$tables$txt, "txt", file, data$zipname)
-  })
+  output$dTXT <- downloadHandler(filename = function(){data$zipname}, content = function(file) {
+    t <- data$tables$txt[as.numeric(data$selected)]
+    for(i in 1:length(t)) {
+      sink(str_c(data$zipname,"~",data$selected[i],".txt"))
+      cat(t[i])
+      sink()
+    }
+    zip(file, str_c(data$zipname,"~",data$selected,".txt"))
+    for(i in 1:length(t))
+      unlink(str_c(data$zipname,"~",data$selected[i],".txt"))
+  },
+  contentType = "application/zip")
   #### END ####
   #On URL change, delete files
   #On session end, delete current URL files (if any)
   #session$onSessionEnded(clearfiles(session$ns("name")))
   #unlink(zipname and all the individual tables)
+  ### Do I even need to do this? ###
 })
-
-createZIP <- function (sel, tables, type, file, zipname) {
-  return(str_c(zipname,".zip"))
-}
 
 TableEater <- function (url) {
   sep <- c(","," ")

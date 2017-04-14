@@ -1,25 +1,35 @@
 library(shiny)
 shinyUI(bootstrapPage(
+  HTML("<center>"),
   titlePanel("Table Eater"),
+  HTML("</center>"),
   sidebarLayout(
     sidebarPanel(
       textInput("url", NULL, placeholder = "URL address of table(s)"),
-      actionButton("submitURL", "Submit")
+      actionButton("submitURL", "Submit"),
+      conditionalPanel(condition="output.tableOut",
+                       HTML("</br><center>"),
+                       column(4,actionButton("goLeft", NULL,icon("arrow-left"))),
+                       column(4,textOutput("position")),
+                       column(4,actionButton("goRight", NULL,icon("arrow-right"))),
+                       HTML("</center></br></br>")
+      ),
+      conditionalPanel(condition="output.tableOut",
+                       conditionalPanel(condition="input.tablesChosen",
+                                        HTML("<center>"),
+                                        actionButton("invertSel", "Invert Selection"),
+                                        downloadButton("dCSV","Download CSV"),
+                                        downloadButton("dTXT","Download TXT"),
+                                        HTML("</center>")
+                       ),
+                       selectInput("tablesChosen", "Select Tables:", NULL, multiple = T)
+      )
     ),
     mainPanel(
-      column(2,actionButton("goLeft", NULL,icon("arrow-left"))),
-      column(2,textOutput("position")),
-      column(2,actionButton("goRight", NULL,icon("arrow-right"))),
-      HTML("</br>"),
-      HTML("</br>"),
-      HTML("</br>"),
+      HTML("<div class='well'><center>"),
+      h4("Tables"),
       htmlOutput("tableOut"),
-      selectInput("tablesChosen", NULL, NULL, multiple = T),
-      column(2,actionButton("invertSel", "Invert Selection")), # Move into the conditional panel
-      column(4,conditionalPanel(condition="input.tablesChosen",
-                       downloadButton("dCSV","Download CSV"),
-                       downloadButton("dTXT","Download TXT")
-      ))
+      HTML("</center></div>")
     )
   ),
   tags$script(
@@ -29,6 +39,12 @@ shinyUI(bootstrapPage(
         Shiny.addCustomMessageHandler('alert',function(msg) {
           alert(msg);
         });
+      });
+      $('#url').keydown(function(event){
+        if (event.which == 13) {
+          event.preventDefault();
+          $('#submitURL').trigger('click');
+        }
       });"
     )
   )
