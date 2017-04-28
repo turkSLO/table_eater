@@ -171,3 +171,9 @@ Staring at the code and the applet on shinyapps.io trying to see what else I nee
 RCurl could not handle redirects, but rvest can, so I added that library. I would have completely replaced RCurl, but rvest does not have the ability to check if a URL exists and would require a tryCatch rather than a simple if-else.
 
 Libraries added: rvest
+
+Notes: Loading circle conditional on boolean placed before and after execution of function. Delete hidden data ("display:none;").
+
+*Thursday Apr 27, 2017 20:00-00:00*
+
+I added in a basic progress bar to show that something is actually happening when you press submit. I also added more to the cleaning process, hidden things will now be deleted. Additionally, I made it so that if you only are downloading a single table, it will give a the CSV or TXT rather than a zipfile containing the table. Finally, I started work on the interactive guide. It may take a while and a bit of cleaning up, but I think it would be the preferrable way of handling instructions for first time users.

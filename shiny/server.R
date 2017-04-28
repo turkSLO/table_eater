@@ -5,34 +5,39 @@ library(stringr)
 library(utils)
 library(shiny)
 shinyServer(function(input, output, session) {
-  data <- reactiveValues(url=NULL, tables=NULL, selected=NULL, showing=0, ntables=0, zipname = NULL)
+  data <- reactiveValues(url=NULL, tables=NULL, selected=NULL, showing=0, ntables=0, name = NULL)
   observeEvent(input$submitURL,{
-    if(url.exists(input$url)) {
-      data$url <- input$url
-      badURL <- F
-      tryCatch({
-        data$tables <- TableEater(data$url)
-      }, warning = function(w) {
-        session$sendCustomMessage(type = "alert", "No Tables Found")
-        badURL <<- T
-      }, error = function(e) {
-        session$sendCustomMessage(type = "alert", "No Tables Found")
-        badURL <<- T
-      })
-      if(badURL) {
-        return()
+    withProgress(message = "Analysing site", value=0, {
+      if(url.exists(input$url)) {
+        incProgress(.5, detail = "Cleaning Tables")
+        data$url <- input$url
+        badURL <- F
+        tryCatch({
+          data$tables <- TableEater(data$url)
+        }, warning = function(w) {
+          session$sendCustomMessage(type = "alert", "No Tables Found")
+          badURL <<- T
+        }, error = function(e) {
+          session$sendCustomMessage(type = "alert", "No Tables Found")
+          badURL <<- T
+        })
+        if(badURL) {
+          return()
+        }
+        data$name <- str_replace_all(data$url,"http(s|)://([a-zA-Z.]+)/.*","\\2")
+        data$ntables <- length(data$tables[[2]])
+        updateSelectInput(session, "tablesChosen", choices = 1:data$ntables)
+        output$tableOut <- renderUI({
+          HTML(data$tables[[1]][1])
+        })
+        data$showing <- 1
+        output$position <- renderText(str_c(data$showing,"/",data$ntables))
+        setProgress(1)
+      } else {
+        setProgress(1)
+        session$sendCustomMessage(type = "alert", "Bad URL")
       }
-      data$zipname <- str_c(str_replace_all(data$url,"http(s|)://([a-zA-Z.]+)/.*","\\2"),".zip")
-      data$ntables <- length(data$tables[[2]])
-      updateSelectInput(session, "tablesChosen", choices = 1:data$ntables)
-      output$tableOut <- renderUI({
-        HTML(data$tables[[1]][1])
-      })
-      data$showing <- 1
-      output$position <- renderText(str_c(data$showing,"/",data$ntables))
-    } else {
-      session$sendCustomMessage(type = "alert", "Bad URL")
-    }
+    })
   })
   observeEvent(input$goLeft,{
     if(data$showing>1) {
@@ -59,30 +64,40 @@ shinyServer(function(input, output, session) {
     data$selected <- (1:data$ntables)[-as.numeric(data$selected)]
     updateSelectInput(session, "tablesChosen", selected = data$selected)
   })
-  output$dCSV <- downloadHandler(filename = function(){data$zipname}, content = function(file) {
+  output$dCSV <- downloadHandler(filename = function(){if(length(as.numeric(data$selected))>1) str_c(data$name,".zip") else str_c(data$name,".csv")}, content = function(file) {
     t <- data$tables$csv[as.numeric(data$selected)]
-    for(i in 1:length(t)) {
-      sink(str_c(data$zipname,"~",data$selected[i],".csv"))
-      cat(t[i])
+    if (length(t) > 1) {
+      for(i in 1:length(t)) {
+        sink(str_c(data$name,"~",data$selected[i],".csv"))
+        cat(t[i])
+        sink()
+      }
+      zip(file, str_c(data$name,"~",data$selected,".csv"))
+      for(i in 1:length(t))
+        unlink(str_c(data$name,"~",data$selected[i],".csv"))
+    } else {
+      sink(file)
+      cat(t)
       sink()
     }
-    zip(file, str_c(data$zipname,"~",data$selected,".csv"))
-    for(i in 1:length(t))
-      unlink(str_c(data$zipname,"~",data$selected[i],".csv"))
-  },
-  contentType = "application/zip")
-  output$dTXT <- downloadHandler(filename = function(){data$zipname}, content = function(file) {
+  })
+  output$dTXT <- downloadHandler(filename = function(){if(length(as.numeric(data$selected))>1) str_c(data$name,".zip") else str_c(data$name,".txt")}, content = function(file) {
     t <- data$tables$txt[as.numeric(data$selected)]
-    for(i in 1:length(t)) {
-      sink(str_c(data$zipname,"~",data$selected[i],".txt"))
-      cat(t[i])
+    if (length(t) > 1){
+      for(i in 1:length(t)) {
+        sink(str_c(data$name,"~",data$selected[i],".txt"))
+        cat(t[i])
+        sink()
+      }
+      zip(file, str_c(data$name,"~",data$selected,".txt"))
+      for(i in 1:length(t))
+        unlink(str_c(data$name,"~",data$selected[i],".txt"))
+    } else {
+      sink(file)
+      cat(t)
       sink()
     }
-    zip(file, str_c(data$zipname,"~",data$selected,".txt"))
-    for(i in 1:length(t))
-      unlink(str_c(data$zipname,"~",data$selected[i],".txt"))
-  },
-  contentType = "application/zip")
+  })
   #### END ####
   #On URL change, delete files
   #On session end, delete current URL files (if any)
@@ -95,6 +110,7 @@ TableEater <- function (url) {
   sep <- c(","," ")
   page <- read_html(url)
   page <- str_replace_all(page,regex("<span.*sortkey.*?span>",ignore_case = T),"")
+  page <- str_replace_all(page,regex("(?:.(?!<\\w+))+display:\\s*none.+?</\\s*\\w+>",ignore_case = T),"")
   page <- str_replace_all(page,"(\\s{2,}|\n)","")
   tableraw <- str_split(page,"<table.*?>",simplify = T)[1,-1]
   #initial clean
