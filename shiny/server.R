@@ -98,12 +98,6 @@ shinyServer(function(input, output, session) {
       sink()
     }
   })
-  #### END ####
-  #On URL change, delete files
-  #On session end, delete current URL files (if any)
-  #session$onSessionEnded(clearfiles(session$ns("name")))
-  #unlink(zipname and all the individual tables)
-  ### Do I even need to do this? ###
 })
 
 TableEater <- function (url) {

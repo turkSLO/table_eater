@@ -177,3 +177,7 @@ Notes: Loading circle conditional on boolean placed before and after execution o
 *Thursday Apr 27, 2017 20:00-00:00*
 
 I added in a basic progress bar to show that something is actually happening when you press submit. I also added more to the cleaning process, hidden things will now be deleted. Additionally, I made it so that if you only are downloading a single table, it will give a the CSV or TXT rather than a zipfile containing the table. Finally, I started work on the interactive guide. It may take a while and a bit of cleaning up, but I think it would be the preferrable way of handling instructions for first time users.
+
+*Thursday May 4, 2017 20:00:22:00 & Friday May 5, 2017 13:00-20:00*
+
+Created the guide, looks good to me, but getting some eyes on it might help. Quite a few things were tricky to design, I have a hard time not designing things to work generically rather than specifics.
