@@ -1,5 +1,6 @@
 library(shiny)
 shinyUI(bootstrapPage(
+  #Creating the basic things for the tutorial
   HTML("<div class='overlay-back'></div>
        <div class='overlay'>
         <center><span style='color:white; font-weight: bold; font-size: 48px;'>Tutorial</span></center></br>
@@ -13,6 +14,7 @@ shinyUI(bootstrapPage(
     sidebarPanel(
       textInput("url", NULL, placeholder = "URL address of table(s)"),
       actionButton("submitURL", "Submit"),
+      #If there's no table, then we have no reason for preview controls
       conditionalPanel(condition="output.tableOut",
                        HTML("</br><center>"),
                        column(4,actionButton("goLeft", NULL,icon("arrow-left"))),
@@ -20,6 +22,7 @@ shinyUI(bootstrapPage(
                        column(4,actionButton("goRight", NULL,icon("arrow-right"))),
                        HTML("</center></br></br>")
       ),
+      #If no tables are picked, we don't need a download button
       conditionalPanel(condition="output.tableOut",
                        conditionalPanel(condition="input.tablesChosen",
                                         HTML("<center>"),
@@ -30,6 +33,7 @@ shinyUI(bootstrapPage(
                        ),
                        selectInput("tablesChosen", "Select Tables:", NULL, multiple = T)
       ),
+      #Contribution section
       HTML("</br><div align='right' style='font-size:10px;'>Shiny app by Brandon Turk</br>
            Base R code by Brandon Turk</br>
            Shiny source files: <a href='https://github.com/turkSLO/table_eater'>Github</a></div>")
@@ -44,6 +48,7 @@ shinyUI(bootstrapPage(
   HTML("
     <button id='enter-guide' class='btn btn-default' type='button'>Enter Tutorial</button>
   "),
+  #CSS and JS used for tutorial as well as the alert system
   tags$head(
     tags$style(HTML("
       .overlay-back {
