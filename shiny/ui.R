@@ -52,7 +52,7 @@ shinyUI(bootstrapPage(
   tags$head(
     tags$style(HTML("
       .overlay-back {
-        position   : absolute;
+        position   : fixed;
         top        : 0;
         left       : 0;
         width      : 100%;
@@ -65,7 +65,7 @@ shinyUI(bootstrapPage(
       }
 
       .overlay {
-        position : absolute;
+        position : fixed;
         top      : 0;
         left     : 0;
         width    : 100%;
@@ -79,13 +79,13 @@ shinyUI(bootstrapPage(
       }
                     
       #exit-guide {
-        position : absolute;
+        position : fixed;
         bottom   : 10px;
         right    : 10px;
         z-index  : 11;
       }
       #enter-guide {
-        position : absolute;
+        position : fixed;
         bottom   : 10px;
         right    : 10px;
         z-index  : 0;

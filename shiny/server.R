@@ -182,9 +182,9 @@ TableEater <- function (url) {
           }
         }
         #Check if there's any quotes inside the element and solve the issue for CSV
-        if(str_detect(elem[k],'(?<=>)\\\"'))
-          elemCSV[k] <- str_replace_all(elemCSV[k], '\\\"', '\"\"')
-        if(str_detect(elem[k],'(?<=>).*(,|\\\"\\\")'))
+        if(str_detect(elem[k],'(?<=>).*\"'))
+          elemCSV[k] <- str_replace_all(elemCSV[k], '\"', '\"\"')
+        if(str_detect(elemCSV[k],'(?<=>).*(,|\"\")'))
           elemCSV[k] <- str_c('"',str_trim(elemCSV[k]),'"')
         #Check if there's any spaces inside the element and solve the issue for TXT
         if(str_detect(elem[k],"\\s"))
