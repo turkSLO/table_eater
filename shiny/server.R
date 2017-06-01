@@ -147,6 +147,8 @@ TableEater <- function (url) {
   tables$csv <- tables$txt <- tableraw
   #Remove the useless tags
   tableraw <- str_replace_all(tableraw,regex("<((/|)t(head|body)|tr).*?>",ignore_case = T),"")
+  #Remove &nbsp;
+  tableraw <- str_replace_all(tableraw,intToUtf8(160),"")
   #Start cleaning individual tables
   for(i in 1:length(tableraw)) {
     #Split the table by rows

@@ -16,6 +16,7 @@ TableEater <- function (url, type=c("csv","txt")) {
   badtable <- c()
   tableraw <- str_split(tableraw,"</table>",simplify = T)[,1]
   tableraw <- str_replace_all(tableraw,regex("<((/|)t(head|body)|tr).*?>",ignore_case = T),"")
+  tableraw <- str_replace_all(tableraw,intToUtf8(160),"")
   #actual work
   for(i in 1:length(tableraw)) {
     row <- str_split(tableraw[i],"</tr>",simplify = T)[1,]
